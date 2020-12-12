@@ -1,14 +1,21 @@
 import 'package:equatable/equatable.dart';
 
 class Post extends Equatable {
-  final String userId;
-  final String id;
+  final int id;
   final String title;
   final String body;
 
-  Post({this.userId, this.title, this.body, this.id})
-      : assert(userId != null && title != null && body != null && id != null);
+  Post({this.title, this.body, this.id})
+      : assert(title != null && body != null && id != null);
 
   @override
-  List<Object> get props => [userId, id, title, body];
+  List<Object> get props => [id, title, body];
+
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      id: json['id'] as int,
+      title: json['title'] as String,
+      body: json['body'] as String,
+    );
+  }
 }

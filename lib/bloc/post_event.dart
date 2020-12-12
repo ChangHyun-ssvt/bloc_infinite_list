@@ -1,1 +1,1 @@
-abstract class PostEvent {}
+enum PostEvent { getPosts }
