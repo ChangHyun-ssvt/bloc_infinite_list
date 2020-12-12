@@ -1,31 +1,34 @@
 import 'package:bloc_infinite_list/model/post.dart';
 import 'package:equatable/equatable.dart';
 
+enum PostStatus { initial, success, failure }
+
 class PostState extends Equatable {
-  @override
-  List<Object> get props => [];
-}
-
-class PostInitial extends PostState {}
-
-class PostFailure extends PostState {}
-
-class PostSuccess extends PostState {
+  final PostStatus status;
   final List<Post> posts;
+  final int lastPostId;
   final bool hasReachedMax;
 
-  PostSuccess({this.posts, this.hasReachedMax});
+  PostState(
+      {this.status = PostStatus.initial,
+      this.posts,
+      this.lastPostId = 0,
+      this.hasReachedMax});
 
-  PostSuccess copyWith({
+  PostState copyWith({
+    PostStatus status,
     List<Post> posts,
+    int lastPostId,
     bool hasReachedMax,
   }) {
-    return PostSuccess(
+    return PostState(
+      status: status ?? this.status,
       posts: posts ?? this.posts,
+      lastPostId: lastPostId ?? this.lastPostId,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
   }
 
   @override
-  List<Object> get props => [posts];
+  List<Object> get props => [status, posts, hasReachedMax];
 }
