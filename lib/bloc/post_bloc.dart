@@ -8,19 +8,35 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc() : super(PostInitial());
 
+  final int _postLimit = 20;
+
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {
     final currentState = state;
-    switch (event) {
-      case PostEvent.getPosts:
+    try {
+      if (event == PostEvent.getPosts && !_hasReachedMax(currentState)) {
+        print("mapEventToState");
         if (currentState is PostInitial) {
-          final posts = await _fetchPosts(0, 20);
-          yield PostSuccess(posts: posts);
-          break;
+          final posts = await _fetchPosts(0, _postLimit);
+          yield PostSuccess(posts: posts, hasReachedMax: false);
+          return;
         }
-        break;
+        if (currentState is PostSuccess) {
+          final posts =
+              await _fetchPosts(currentState.posts.length, _postLimit);
+          yield posts.isEmpty
+              ? currentState.copyWith(hasReachedMax: true)
+              : PostSuccess(
+                  posts: currentState.posts + posts, hasReachedMax: false);
+        }
+      }
+    } catch (e) {
+      yield PostFailure();
     }
   }
+
+  bool _hasReachedMax(PostState state) =>
+      state is PostSuccess && state.hasReachedMax;
 
   Future<List<Post>> _fetchPosts(int startIndex, int limit) async {
     ApiHelper apiHelper =

@@ -55,6 +55,9 @@ class _PostScreenState extends State<PostScreen> {
                         ? BottomLoader()
                         : PostItem(post: state.posts[index]);
                   },
+                  itemCount: state.hasReachedMax
+                      ? state.posts.length
+                      : state.posts.length + 1,
                   controller: _scrollController,
                 );
             } else {
@@ -74,6 +77,7 @@ class _PostScreenState extends State<PostScreen> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
+      print(maxScroll - currentScroll);
       _postBloc.add(PostEvent.getPosts);
     }
   }

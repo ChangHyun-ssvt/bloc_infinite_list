@@ -12,8 +12,19 @@ class PostFailure extends PostState {}
 
 class PostSuccess extends PostState {
   final List<Post> posts;
+  final bool hasReachedMax;
 
-  PostSuccess({this.posts});
+  PostSuccess({this.posts, this.hasReachedMax});
+
+  PostSuccess copyWith({
+    List<Post> posts,
+    bool hasReachedMax,
+  }) {
+    return PostSuccess(
+      posts: posts ?? this.posts,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
 
   @override
   List<Object> get props => [posts];
