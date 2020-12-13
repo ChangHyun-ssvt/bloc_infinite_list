@@ -34,33 +34,26 @@ class _PostScreenState extends State<PostScreen> {
         ),
         body: BlocBuilder<PostBloc, PostState>(
           builder: (context, state) {
-            if (state.status == PostStatus.initial) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (state.status == PostStatus.failure) {
-              return Center(
-                child: Text('failed to fetch posts'),
-              );
-            }
-            if (state.status == PostStatus.success) {
-              if (state.posts.isEmpty) {
+            switch (state.status) {
+              case PostStatus.failure:
                 return Center(
-                  child: Text('no posts'),
+                  child: Text('failed to fetch posts'),
                 );
-              } else
-                return ListView.builder(
-                  itemBuilder: (context, index) {
-                    return index >= state.posts.length
-                        ? BottomLoader()
-                        : PostItem(post: state.posts[index]);
-                  },
-                  itemCount: state.posts.length + 1,
-                  controller: _scrollController,
-                );
-            } else {
-              return Container();
+              default:
+                if (state.posts.isEmpty) {
+                  return Center(
+                    child: Text('no posts'),
+                  );
+                } else
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return index >= state.posts.length
+                          ? BottomLoader()
+                          : PostItem(post: state.posts[index]);
+                    },
+                    itemCount: state.posts.length + 1,
+                    controller: _scrollController,
+                  );
             }
           },
         ));
@@ -73,7 +66,9 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   void _onScroll() {
-    if (_isBottom) _postBloc.add(PostEvent.getPosts);
+    if (_isBottom) {
+      _postBloc.add(PostEvent.getPosts);
+    }
   }
 
   bool get _isBottom {

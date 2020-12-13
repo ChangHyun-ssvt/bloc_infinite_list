@@ -32,6 +32,7 @@ dependencies:
   equatable: ^1.2.5
   http: ^0.12.2
   rxdart: ^0.25.0
+  pull_to_refresh: ^1.6.3
 
 dev_dependencies:
   flutter_test:

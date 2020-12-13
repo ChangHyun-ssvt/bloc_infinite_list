@@ -7,50 +7,47 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PostBloc extends Bloc<PostEvent, PostState> {
-  PostBloc() : super(PostState(hasReachedMax: false));
+  PostBloc() : super(PostState(posts: []));
 
   final int _postLimit = 20;
+
+  @override
+  void onChange(Change<PostState> change) {
+    print(change.nextState.status);
+    super.onChange(change);
+  }
 
   @override
   Stream<Transition<PostEvent, PostState>> transformEvents(
       Stream<PostEvent> events, transitionFn) {
     return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
-    );
+        events.debounceTime(const Duration(milliseconds: 500)), transitionFn);
   }
 
   @override
   Stream<PostState> mapEventToState(PostEvent event) async* {
     switch (event) {
       case PostEvent.getPosts:
-        print("getPosts");
-        yield await _mapPostFetchedToState(state);
-    }
-  }
-
-  Future<PostState> _mapPostFetchedToState(PostState state) async {
-    try {
-      if (state.status == PostStatus.initial) {
-        final posts = await _fetchPosts(state.lastPostId, _postLimit);
-        return state.copyWith(
-          status: PostStatus.success,
-          posts: posts,
-          lastPostId: posts.last.id,
-          hasReachedMax: _hasReachedMax(posts.length),
-        );
-      } else {
-        final posts = await _fetchPosts(state.lastPostId, _postLimit);
-        return posts.isEmpty
-            ? state.copyWith(hasReachedMax: true)
-            : state.copyWith(
+        try {
+          yield state.copyWith(status: PostStatus.pending);
+          if (state.lastPostId != 100) {
+            final posts = await _fetchPosts(state.lastPostId, _postLimit);
+            yield state.copyWith(
+              status: PostStatus.success,
+              posts: List.of(state.posts)..addAll(posts),
+              lastPostId: posts.last.id,
+            );
+            break;
+          } else {
+            final posts = await _fetchPosts(0, _postLimit);
+            yield state.copyWith(
                 status: PostStatus.success,
                 posts: List.of(state.posts)..addAll(posts),
-                lastPostId: state.hasReachedMax ? 0 : posts.last.id,
-                hasReachedMax: _hasReachedMax(posts.length));
-      }
-    } catch (e) {
-      return state.copyWith(status: PostStatus.failure);
+                lastPostId: _postLimit);
+          }
+        } catch (e) {
+          yield state.copyWith(status: PostStatus.failure);
+        }
     }
   }
 
@@ -65,6 +62,4 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     });
     return _posts;
   }
-
-  bool _hasReachedMax(int postsCount) => postsCount < _postLimit ? true : false;
 }
