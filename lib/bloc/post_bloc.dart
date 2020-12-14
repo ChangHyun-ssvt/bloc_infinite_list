@@ -1,10 +1,11 @@
-import 'package:bloc_infinite_list/bloc/post_event.dart';
 import 'package:bloc_infinite_list/bloc/post_state.dart';
 import 'package:bloc_infinite_list/common/constants.dart';
 import 'package:bloc_infinite_list/model/post.dart';
 import 'package:bloc_infinite_list/service/api_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
+
+enum PostEvent { getPosts }
 
 class PostBloc extends Bloc<PostEvent, PostState> {
   PostBloc() : super(PostState(posts: []));

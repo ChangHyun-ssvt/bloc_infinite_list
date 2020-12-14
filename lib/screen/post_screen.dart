@@ -1,13 +1,10 @@
 import 'package:bloc_infinite_list/bloc/post_bloc.dart';
-import 'package:bloc_infinite_list/bloc/post_event.dart';
 import 'package:bloc_infinite_list/bloc/post_state.dart';
 import 'package:bloc_infinite_list/widget/bottom_lodaer.dart';
 import 'package:bloc_infinite_list/widget/post_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/post_event.dart';
 
 class PostScreen extends StatefulWidget {
   @override
