@@ -13,12 +13,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
   final int _postLimit = 20;
 
   @override
-  void onChange(Change<PostState> change) {
-    print(change.nextState.status);
-    super.onChange(change);
-  }
-
-  @override
   Stream<Transition<PostEvent, PostState>> transformEvents(
       Stream<PostEvent> events, transitionFn) {
     return super.transformEvents(
