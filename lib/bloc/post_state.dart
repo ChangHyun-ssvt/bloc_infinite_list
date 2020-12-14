@@ -1,7 +1,7 @@
 import 'package:bloc_infinite_list/model/post.dart';
 import 'package:equatable/equatable.dart';
 
-enum PostStatus { pending, success, failure }
+enum PostStatus { success, failure }
 
 class PostState extends Equatable {
   final PostStatus status;

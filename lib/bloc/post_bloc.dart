@@ -29,7 +29,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
     switch (event) {
       case PostEvent.getPosts:
         try {
-          yield state.copyWith(status: PostStatus.pending);
           if (state.lastPostId != 100) {
             final posts = await _fetchPosts(state.lastPostId, _postLimit);
             yield state.copyWith(
