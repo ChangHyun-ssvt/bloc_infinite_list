@@ -35,6 +35,10 @@ class _PostScreenState extends State<PostScreen> {
         body: BlocBuilder<PostBloc, PostState>(
           builder: (context, state) {
             switch (state.status) {
+              case PostStatus.initial:
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
               case PostStatus.failure:
                 return Center(
                   child: Text('failed to fetch posts'),

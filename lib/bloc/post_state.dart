@@ -1,7 +1,7 @@
 import 'package:bloc_infinite_list/model/post.dart';
 import 'package:equatable/equatable.dart';
 
-enum PostStatus { success, failure }
+enum PostStatus { initial, success, failure }
 
 class PostState extends Equatable {
   final PostStatus status;
@@ -9,7 +9,7 @@ class PostState extends Equatable {
   final int lastPostId;
 
   PostState(
-      {this.status = PostStatus.success, this.posts, this.lastPostId = 0});
+      {this.status = PostStatus.initial, this.posts, this.lastPostId = 0});
 
   PostState copyWith({
     PostStatus status,
